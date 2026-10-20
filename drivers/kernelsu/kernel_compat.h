@@ -197,8 +197,12 @@ static noinline ssize_t ksu_kernel_write_compat(struct file *file, const void *b
 #endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 4, 0)
-#define IS_ENABLED(opt) (opt + 0)
+#ifdef CONFIG_KSU_DEBUG
+#define IS_ENABLED(option) (option)
+#else
+#define IS_ENABLED(option) 0
 #endif
+#endif // only used for debug log opt-out
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 6, 0)
 static __nocfi struct file *ksu_dentry_open(const struct path *path, int flags, const struct cred *cred)
