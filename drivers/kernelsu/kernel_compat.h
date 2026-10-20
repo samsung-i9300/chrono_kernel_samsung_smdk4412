@@ -196,6 +196,10 @@ static noinline ssize_t ksu_kernel_write_compat(struct file *file, const void *b
 #define TWA_RESUME 1
 #endif
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(3, 4, 0)
+#define IS_ENABLED(opt) (opt + 0)
+#endif
+
 #if LINUX_VERSION_CODE < KERNEL_VERSION(3, 6, 0)
 static __nocfi struct file *ksu_dentry_open(const struct path *path, int flags, const struct cred *cred)
 {

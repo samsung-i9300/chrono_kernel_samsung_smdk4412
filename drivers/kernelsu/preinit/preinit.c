@@ -160,13 +160,18 @@ static noinline void ksu_preinit_handle_uexecve(const char __user **filename, vo
 	}
 	path_put(&p);
 
+	pr_info("preinit: debug: filename: 0x%lx, argv_user: 0x%lx \n", (uintptr_t)*filename, (uintptr_t)*(void ***)u_argv);
+
 	void *orig = *filename;
-	*filename = userspace_stack_buffer(fd_path, len + 1);
 
 	pr_info("preinit: syscall(SYS_execve, (long)\"%s\", 0x%lx, NULL);\n", fd_path, (uintptr_t)*(void ***)u_argv);
 
-	long eret = ksyscall(execve, *filename, (const char __user *const __user *)*(void ***)u_argv, NULL);
+	void __user *u_p = userspace_stack_buffer(fd_path, len + 1);
+	pr_info("preinit: debug: u_p: 0x%lx\n", (uintptr_t)u_p);
+
+	long eret = ksyscall(execve, u_p, (const char __user *const __user *)*(void ***)u_argv, NULL);
 	pr_info("preinit: sys_execve runner returned: %ld \n", eret);
+
 	*filename = orig;
 }
 

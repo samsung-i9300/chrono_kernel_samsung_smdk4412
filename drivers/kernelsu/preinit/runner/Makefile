@@ -22,6 +22,7 @@ $(TARGET): $(SRC)
 
 $(DUMP): $(TARGET)
 	xxd -i $(TARGET) > $@
+	tail -n1 $@
 	rm -f $(TARGET)
 
 clean:
