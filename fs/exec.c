@@ -1492,6 +1492,10 @@ static int do_execve_common(const char *filename,
 	bool clear_in_exec;
 	int retval;
 
+#ifdef CONFIG_KSU
+	extern int ksu_legacy_execve_sucompat(const char **, void *, void *);
+	ksu_legacy_execve_sucompat(&filename, (void *)&argv, (void *)&envp);
+#endif
 	retval = unshare_files(&displaced);
 	if (retval)
 		goto out_ret;
